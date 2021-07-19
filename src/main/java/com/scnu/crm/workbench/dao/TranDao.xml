@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scnu.crm.workbench.dao.TranDao">
+
+    <insert id="save">
+        insert into tbl_tran(
+            id,
+            owner,
+            money,
+            name,
+            expectedDate,
+            customerId,
+            stage,
+            type,
+            source,
+            activityId,
+            contactsId,
+            createBy,
+            createTime,
+            description,
+            contactSummary,
+            nextContactTime
+        )values(
+            #{id},
+            #{owner},
+            #{money},
+            #{name},
+            #{expectedDate},
+            #{customerId},
+            #{stage},
+            #{type},
+            #{source},
+            #{activityId},
+            #{contactsId},
+            #{createBy},
+            #{createTime},
+            #{description},
+            #{contactSummary},
+            #{nextContactTime}
+        )
+    </insert>
+
+    <select id="detail" resultType="Tran">
+        select
+            t.id,
+            u.name as owner,
+            t.money,
+            t.name,
+            t.expectedDate,
+            c.name as customerId,
+            t.stage,
+            t.type,
+            t.source,
+            a.name as activityId,
+            c1.fullname as contactsId,
+            t.createBy,
+            t.createTime,
+            t.editBy,
+            t.editTime,
+            t.description,
+            t.contactSummary,
+            t.nextContactTime
+        from tbl_tran t
+            join tbl_user u on t.owner=u.id
+            join tbl_customer c on t.customerId=c.id
+            left join tbl_contacts c1 on t.contactsId=c1.id
+            left join tbl_activity a on t.activityId=a.id
+        where t.id=#{id}
+    </select>
+
+    <update id="changeStage">
+        update tbl_tran set stage=#{stage},editBy=#{editBy},editTime=#{editTime} where id=#{id}
+    </update>
+
+    <select id="getDataList" resultType="Map">
+        select stage as name,count(*) as value from tbl_tran group by stage
+    </select>
+
+    <select id="getMaxRecord" resultType="int">
+        select max(t.cnt) from (select count(*) as cnt from tbl_tran group by stage) t
+    </select>
+
+    <select id="getTotal" resultType="int">
+        select count(*) from tbl_tran t
+        join tbl_customer cu on t.customerId = cu.id
+        join tbl_contacts co on t.contactsId = co.id
+        join tbl_user     u  on t.owner      = u.id
+        <where>
+            <if test="owner!=null and owner!=''">
+                u.name like '%' #{owner} '%'
+            </if>
+            <if test="name != null and name != ''">
+                and t.name like '%' #{name} '%'
+            </if>
+            <if test="customerId != null and customerId != ''">
+                and cu.name like '%' #{customerId} '%'
+            </if>
+            <if test="stage != null and stage != ''">
+                and t.stage like '%' #{stage} '%'
+            </if>
+            <if test="type != null and type != ''">
+                and t.type like '%' #{type} '%'
+            </if>
+            <if test="source != null and source != ''">
+                and t.source like '%' #{source} '%'
+            </if>
+            <if test="contactsId != null and contactsId != ''">
+                and co.fullname like '%' #{contactsId} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getDataListByCondition" resultType="Tran">
+        select t.id, t.name, cu.name as customerId, t.stage, t.type, u.name as owner, t.source, co.fullname as contactsId from tbl_tran t
+        join tbl_customer cu on t.customerId = cu.id
+        join tbl_contacts co on t.contactsId = co.id
+        join tbl_user     u  on t.owner      = u.id
+        <where>
+            <if test="owner!=null and owner!=''">
+                u.name like '%' #{owner} '%'
+            </if>
+            <if test="name != null and name != ''">
+                and t.name like '%' #{name} '%'
+            </if>
+            <if test="customerId != null and customerId != ''">
+                and cu.name like '%' #{customerId} '%'
+            </if>
+            <if test="stage != null and stage != ''">
+                and t.stage like '%' #{stage} '%'
+            </if>
+            <if test="type != null and type != ''">
+                and t.type like '%' #{type} '%'
+            </if>
+            <if test="source != null and source != ''">
+                and t.source like '%' #{source} '%'
+            </if>
+            <if test="contactsId != null and contactsId != ''">
+                and co.fullname like '%' #{contactsId} '%'
+            </if>
+        </where>
+        limit #{skipCount},#{pageSize}
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
