@@ -3,10 +3,7 @@ package com.scnu.crm.workbench.web.controller;
 import com.scnu.crm.exceptions.ClueException;
 import com.scnu.crm.settings.domain.User;
 import com.scnu.crm.settings.service.UserService;
-import com.scnu.crm.settings.service.impl.UserServiceImpl;
 import com.scnu.crm.utils.DateTimeUtil;
-import com.scnu.crm.utils.PrintJson;
-import com.scnu.crm.utils.ServiceFactory;
 import com.scnu.crm.utils.UUIDUtil;
 import com.scnu.crm.vo.PaginationVo;
 import com.scnu.crm.workbench.domain.Activity;
@@ -14,21 +11,15 @@ import com.scnu.crm.workbench.domain.Clue;
 import com.scnu.crm.workbench.domain.Tran;
 import com.scnu.crm.workbench.service.ActivityService;
 import com.scnu.crm.workbench.service.ClueService;
-import com.scnu.crm.workbench.service.impl.ActivityServiceImpl;
-import com.scnu.crm.workbench.service.impl.ClueServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +35,7 @@ public class ClueController {
     @Autowired
     private ActivityService as;
 
-    @PostMapping("/convert.do")
+    @RequestMapping("/convert.do")
     private String convert(HttpServletRequest request) {
         String method = request.getMethod();
         String clueId = request.getParameter("clueId");
